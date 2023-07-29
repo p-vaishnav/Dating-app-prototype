@@ -3,7 +3,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const User = require('../model/user.model')
 
-const auth = async (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
     try {
         // get the token from the header
         const token = req.header('Authorization').replace('Bearer ', '')
@@ -26,4 +26,4 @@ const auth = async (req, res, next) => {
     }
 }
 
-module.exports = auth
+module.exports = isAuthenticated

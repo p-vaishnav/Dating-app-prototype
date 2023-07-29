@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     // password is required and has a minimum length of 7
     password: {
+        // TODO: decrypt the password
         type: String,
         required: true,
         minlength: 7,
@@ -35,7 +36,6 @@ const userSchema = new mongoose.Schema({
     // jobTitle is required
     jobTitle: {
         type: String,
-        required: true,
         trim: true
     },
     // address is required
@@ -44,13 +44,57 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    // TODO: Might require it later
-    // jwt token
-    // token: {
-    //     type: String,
-    //     required: true
-    // }
-    
+    location: {
+        // latitude and longitude is required
+        latitude: {
+            type: Number,
+            trim: true
+        },
+        longitude: {
+            type: Number,
+            trim: true
+        }
+    },
+    // profileImage is required, it is a array of strings, which shoud be a url, and a check of url should be maintained
+    profileImage: {
+        type: String,
+        required: true,
+        trim: true,
+        validate: (value) => {
+            // TODO: check if it will work or not
+            if (!validator.isURL(value)) {
+                throw new Error('URL is invalid')
+            }
+        }
+    },
+    // personality type is required
+    profileDescription: {
+        type: String,
+        trim: true
+    },
+    views: {
+        type: [mongoose.Schema.Types.ObjectId],
+    },
+    personalityType: {
+        type: String
+    },
+    interestes: {
+        // by default 5 should be given
+        type: [String],
+        limit: 5,
+    },
+    images: {
+        type: [String],
+        limit: 5,      
+    },
+    plan: {
+        planId: {
+            type: mongoose.Schema.Types.ObjectId,
+        },
+        purchaseDate: {
+            type: Date,
+        },
+    }
 });
 
 module.exports = mongoose.model('User', userSchema)

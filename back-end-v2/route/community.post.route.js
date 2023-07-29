@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const Feedback = require('../model/feedback.model');
-
-
+router.get('/community', (req, res) => {res.send('community')});
 
 module.exports = router;

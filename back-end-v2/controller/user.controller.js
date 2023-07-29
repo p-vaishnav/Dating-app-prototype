@@ -64,4 +64,26 @@ const deleteAccount = async (req, res) => {
     }
 }
 
-module.exports = {login, signup, logout, deleteAccount}
+const increaseProfileViewers = async (req, res) => {
+    // grab the userId from the params
+    const userId = req.params.userId;
+    if (!userId) {
+        res.status(400).send('userId is required');
+    }
+
+    // watcher of the profile
+    const watcher = req.user._id;
+    // grab the user from the database
+    try {
+        const user = await User.findById(userId);
+        user.views.append(watcher);
+        user.save();
+    } catch (e) {
+        res.status(500).send('Internal Server Error');
+        // TODO: if something fails publish in the queue
+    }
+    
+    res.status(200).send('view count increased');
+}
+
+module.exports = {login, signup, logout, deleteAccount, increaseProfileViewers}
