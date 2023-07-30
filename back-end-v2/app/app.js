@@ -10,6 +10,9 @@ const planRouter = require('../route/plan.route');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// using middle-ware
+app.use(express.json())
+
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/feedback", feedbackRouter);
 app.use("/api/v1/community", communityRouter);

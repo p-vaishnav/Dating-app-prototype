@@ -11,23 +11,25 @@ const login = async (req, res) => {
 
     try {
         // TODO: store the email and password in the database
-        const user = await User.find({email, password})
+        const user = await User.findOne({email, password})
+
+        // create the jwt token
+        const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET)
+        
+        // add the token to the cookie
+        res.cookie('token', token);
     } catch (error) {
         console.log(error);
         return res.status(400).json({msg: 'Error while logging in'});
     }
 
-    // create the jwt token
-    const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET)
-    
-    // add the token to the cookie
-    res.cookie('token', token);
+    res.status(200).json({msg: 'Logged in successfully'});
 }
 
 const signup = async (req, res) => {
-    const {name, email, password, jobTitle, address} = req.body;
+    const {name, email, password, jobTitle, address, age, profileImage} = req.body;
 
-    if (!name || !email || !password || !jobTitle || !address) {
+    if (!name || !email || !password || !jobTitle || !address || !age || !profileImage) {
         return res.status(400).json({msg: 'Please enter all fields'});
     }
 
@@ -35,6 +37,12 @@ const signup = async (req, res) => {
         // add the entry to the database, where data will be sent from the front-end by req.body
         const user = await User.create(req.body)
         console.log(user);
+
+        // create the jwt token
+        const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET)
+    
+        // add the token to the cookie
+        res.cookie('token', token);
     } catch (error) {
         console.log(error);
         return res.status(400).json({msg: 'Error while inserting the user'});
@@ -76,7 +84,7 @@ const increaseProfileViewers = async (req, res) => {
     // grab the user from the database
     try {
         const user = await User.findById(userId);
-        user.views.append(watcher);
+        user.views.push(watcher);
         user.save();
     } catch (e) {
         res.status(500).send('Internal Server Error');

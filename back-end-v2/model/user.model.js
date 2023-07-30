@@ -61,9 +61,15 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
         validate: (value) => {
-            // TODO: check if it will work or not
-            if (!validator.isURL(value)) {
-                throw new Error('URL is invalid')
+            // check with the regex if string is valid or not
+            const regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            if (!regex.test(value)) {
+                throw new Error('Invalid URL')
             }
         }
     },

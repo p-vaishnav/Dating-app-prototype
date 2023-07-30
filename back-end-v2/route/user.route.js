@@ -14,7 +14,7 @@ router.post('/login', login);
 router.post('/signup', signup);
 
 // logout
-router.post('/logout', isAuthenticated , logout);
+router.get('/logout', isAuthenticated , logout);
 
 // delete profile by the email provided
 router.delete('/delete', isAuthenticated ,deleteAccount);
@@ -22,7 +22,7 @@ router.delete('/delete', isAuthenticated ,deleteAccount);
 // interests, personalityType, jobTitle, location, profileImage, description, interestes, images they should be come in the update profile
 router.put('/update', isAuthenticated , (req, res) => {res.send('update profile')});
 
-// increase the view_count
+// increase the view-count
 router.put('/view/:userId', isAuthenticated , increaseProfileViewers);
 
 module.exports = router
